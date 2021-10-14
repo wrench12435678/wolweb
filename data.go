@@ -10,10 +10,16 @@ import (
 
 func loadData() {
 
-	devicesFile, err := os.Open("devices.json")
+	devicesFile, err := os.Open("data/devices.json")
 	if err != nil {
-		log.Fatalf("Error loading devices.json file. \"%s\"", err)
-	}
+		file, _ := os.OpenFile("data/devices.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+		defer file.Close()
+
+		encoder := json.NewEncoder(file)
+		encoder.SetIndent("", "    ")
+		encoder.Encode(appData)
+	}else{
+	
 	devicesDecoder := json.NewDecoder(devicesFile)
 	err = devicesDecoder.Decode(&appData)
 	if err != nil {
@@ -21,7 +27,7 @@ func loadData() {
 	}
 	log.Printf("Application data loaded from devices.json")
 	log.Println(" - devices defined in devices.json: ", len(appData.Devices))
-
+	}
 }
 
 func saveData(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +44,7 @@ func saveData(w http.ResponseWriter, r *http.Request) {
 		result.ErrorObject = err
 		log.Printf(" - Issues decoding/saving application data")
 	} else {
-		file, _ := os.OpenFile("devices.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+		file, _ := os.OpenFile("data/devices.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 		defer file.Close()
 
 		encoder := json.NewEncoder(file)

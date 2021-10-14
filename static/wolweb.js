@@ -21,7 +21,7 @@ $(document).ready(function () {
     jQuery.wakeUpDeviceByName = function (deviceName) {
         $.ajax({
             type: "GET",
-            url: vDir + "/wake/" + deviceName,
+            url: "/wake/" + deviceName,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
@@ -40,7 +40,7 @@ $(document).ready(function () {
 
 function getAppData() {
 
-    $.getJSON(vDir + "/data/get", function (data) {
+    $.getJSON("data/get", function (data) {
         window.appData = data;
         if (!appData.devices) {
             appData.devices = [];
@@ -117,7 +117,6 @@ function renderData() {
         name: "ip", title: "Broadcast IP", type: "text", width: 150, validate: { validator: "required", message: "Broadcast IP Address is a required field." },
         insertTemplate: function () {
             var $result = jsGrid.fields.text.prototype.insertTemplate.call(this); // original input
-            $result.attr("disabled", true).css("background", "lightgray").val(bCastIP);
             return $result;
         },
         // editing: false
@@ -176,7 +175,7 @@ function saveAppData() {
 
     $.ajax({
         type: "POST",
-        url: vDir + "/data/save",
+        url: "data/save",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         data: JSON.stringify(appData),
