@@ -4,6 +4,9 @@ services:
     build: .
     container_name: wolweb
     image: "wolweb"
+    volumes:
+      - ./devices.json:/wolweb/devices.json #Allows it to save configs without data loss on restart
+
     
     # Have to use host mode as bridge network has issues with UDP broadcast
     # https://github.com/docker/for-linux/issues/637
